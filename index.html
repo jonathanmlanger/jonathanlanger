@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jonathan Langer | Curriculum Design & Educational Technology</title>
+<meta name="description" content="Jonathan Langer designs technical curriculum and builds the tools that support it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== Colors: edit here to change the whole site ===== */
+:root{
+  --paper:#F6F7F9;
+  --surface:#FFFFFF;
+  --ink:#1B2631;
+  --muted:#56626F;
+  --line:#D9DEE4;
+  --learn:#A86A12;      /* curriculum track */
+  --learn-soft:#F5E9D6;
+  --build:#28598A;      /* tools track */
+  --build-soft:#DFE9F4;
+  --ops:#4E6B4F;        /* operations track */
+  --ops-soft:#E2EBE0;
+  --focus:#28598A;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#141A20; --surface:#1B232B; --ink:#E7ECF0; --muted:#A3AFBA; --line:#2E3944;
+    --learn:#E0A64F; --learn-soft:#3A2D1A; --build:#7FB0E0; --build-soft:#1E3247;
+    --ops:#93B894; --ops-soft:#24332A; --focus:#7FB0E0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A20; --surface:#1B232B; --ink:#E7ECF0; --muted:#A3AFBA; --line:#2E3944;
+  --learn:#E0A64F; --learn-soft:#3A2D1A; --build:#7FB0E0; --build-soft:#1E3247;
+  --ops:#93B894; --ops-soft:#24332A; --focus:#7FB0E0; color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;line-height:1.15;margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+
+/* Header */
+header.site{border-bottom:1px solid var(--line);background:var(--paper)}
+header.site .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-top:1rem;padding-bottom:1rem;flex-wrap:wrap}
+.brand{font-family:"Newsreader",Georgia,serif;font-size:1.35rem;text-decoration:none;font-weight:600}
+nav ul{list-style:none;display:flex;gap:1.5rem;margin:0;padding:0;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.95rem}
+nav a:hover{color:var(--ink)}
+
+/* Hero */
+.hero{padding:4.5rem 0 4rem}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:3.5rem;align-items:center}
+.hero h1{font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:-.01em}
+.statement{margin:1.75rem 0 0;padding:0;list-style:none;display:grid;gap:.9rem}
+.statement li{padding-left:1rem;border-left:4px solid;font-size:1.2rem;max-width:34ch}
+.statement .s-learn{border-color:var(--learn)}
+.statement .s-build{border-color:var(--build)}
+.hero p.lede{color:var(--muted);max-width:52ch;margin:1.75rem 0 2rem}
+.btns{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{display:inline-block;padding:.75rem 1.25rem;border-radius:6px;text-decoration:none;font-weight:600;font-size:.95rem;border:1.5px solid var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:hover{opacity:.85}
+
+/* Signature: standards map */
+.map{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.5rem}
+.map h2{font-size:1.15rem;margin-bottom:.25rem}
+.map p{margin:0 0 1rem;color:var(--muted);font-size:.875rem;line-height:1.45}
+.grid{display:grid;grid-template-columns:auto repeat(5,1fr);gap:4px;font-size:.75rem}
+.grid .hd{color:var(--muted);text-align:center;padding-bottom:.25rem;line-height:1.2}
+.grid .rl{color:var(--muted);padding-right:.5rem;align-self:center;white-space:nowrap}
+.cell{aspect-ratio:1;border-radius:3px;background:var(--line)}
+.c1{background:var(--build-soft)}
+.c2{background:color-mix(in srgb,var(--build) 55%,var(--build-soft))}
+.c3{background:var(--build)}
+@media (prefers-reduced-motion:no-preference){
+  .cell{animation:fill .5s ease-out both;animation-delay:calc(var(--i) * 45ms)}
+  @keyframes fill{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+}
+
+/* Sections */
+section.block{padding:4rem 0;border-top:1px solid var(--line)}
+section.block h2{font-size:clamp(1.8rem,3.5vw,2.4rem);margin-bottom:.5rem}
+.intro{color:var(--muted);max-width:60ch;margin:0 0 2rem}
+
+/* Filters */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filters button{font:inherit;font-size:.9rem;font-weight:500;padding:.45rem .95rem;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* Work list */
+.work{display:grid;gap:.75rem}
+.item{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--build);border-radius:8px}
+.item[data-track="learn"]{border-left-color:var(--learn)}
+.item[data-track="ops"]{border-left-color:var(--ops)}
+.item[hidden]{display:none}
+.item summary{list-style:none;cursor:pointer;padding:1.25rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:.25rem 1rem;align-items:start}
+.item summary::-webkit-details-marker{display:none}
+.item h3{font-size:1.35rem}
+.item .one{grid-column:1;color:var(--muted);font-size:.975rem;margin:0}
+.tag{grid-row:1;grid-column:2;font-size:.8rem;font-weight:600;padding:.2rem .65rem;border-radius:999px;white-space:nowrap}
+.tag.learn{background:var(--learn-soft);color:var(--learn)}
+.tag.build{background:var(--build-soft);color:var(--build)}
+.tag.ops{background:var(--ops-soft);color:var(--ops)}
+.toggle{grid-column:2;grid-row:2;font-size:.85rem;font-weight:500;color:var(--muted);text-align:right}
+.toggle::after{content:"Read case study"}
+.item[open] .toggle::after{content:"Close"}
+.case{padding:0 1.5rem 1.5rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 2rem;border-top:1px solid var(--line);padding-top:1.25rem;margin:0 1.5rem;padding-left:0;padding-right:0}
+.case h4{margin:0 0 .25rem;font-size:.9rem;font-weight:600}
+.case p{margin:0;font-size:.95rem;color:var(--muted)}
+.case .links{grid-column:1/-1;display:flex;gap:1.25rem;flex-wrap:wrap}
+.case .links a{font-weight:600;font-size:.95rem;color:var(--build)}
+
+/* Credentials */
+.creds{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem}
+.creds h3{font-size:1.25rem;margin-bottom:.75rem}
+.creds ul{margin:0;padding:0;list-style:none;display:grid;gap:.75rem}
+.creds li{padding-bottom:.75rem;border-bottom:1px solid var(--line)}
+.creds li span{display:block;color:var(--muted);font-size:.9rem}
+
+/* About & contact */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.about p{max-width:60ch;margin:0 0 1rem}
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:2rem}
+.contact h2{margin-bottom:.75rem}
+.contact p{color:var(--muted);margin:0 0 1.25rem}
+.contact ul{list-style:none;padding:0;margin:0;display:grid;gap:.6rem}
+.contact a{font-weight:600}
+
+footer{padding:2rem 0;color:var(--muted);font-size:.875rem;border-top:1px solid var(--line)}
+
+/* EDIT markers: delete this rule once all placeholders are replaced */
+.todo{background:color-mix(in srgb,var(--learn) 18%,transparent);border-radius:3px;padding:0 .2em}
+
+@media (max-width:820px){
+  .hero{padding:3rem 0}
+  .hero .wrap,.about{grid-template-columns:1fr;gap:2.5rem}
+  .case{grid-template-columns:1fr}
+  .item summary{grid-template-columns:1fr}
+  .tag{grid-row:auto;grid-column:1;justify-self:start;margin-top:.35rem}
+  .toggle{grid-column:1;grid-row:auto;text-align:left}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="#top">Jonathan Langer</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#credentials">Credentials</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Jonathan Langer</h1>
+        <ul class="statement">
+          <li class="s-learn">I design how people learn technical skills.</li>
+          <li class="s-build">I build the tools that make that learning run.</li>
+        </ul>
+        <p class="lede">Computer science educator with a master’s in teaching, a background in banking operations, and a habit of automating whatever slows people down.</p>
+        <div class="btns">
+          <a class="btn primary" href="#work">See my work</a>
+          <!-- EDIT: upload your resume PDF next to this file and keep the name resume.pdf -->
+          <a class="btn" href="resume.pdf">Download resume</a>
+        </div>
+      </div>
+
+      <figure class="map" aria-labelledby="map-title">
+        <h2 id="map-title">Mapping standards, grades 6–8</h2>
+        <p>The core of my district scope and sequence: where each computer science concept is introduced, reinforced, and mastered.</p>
+        <div class="grid" role="img" aria-label="Grid showing computer science concepts across grades 6, 7 and 8, with coverage increasing by grade">
+          <div></div>
+          <div class="hd">Systems</div><div class="hd">Networks</div><div class="hd">Data</div><div class="hd">Coding</div><div class="hd">Impacts</div>
+          <div class="rl">Grade 6</div>
+          <div class="cell c1" style="--i:1"></div><div class="cell" style="--i:2"></div><div class="cell c1" style="--i:3"></div><div class="cell c2" style="--i:4"></div><div class="cell c2" style="--i:5"></div>
+          <div class="rl">Grade 7</div>
+          <div class="cell c2" style="--i:6"></div><div class="cell c2" style="--i:7"></div><div class="cell c2" style="--i:8"></div><div class="cell c2" style="--i:9"></div><div class="cell c1" style="--i:10"></div>
+          <div class="rl">Grade 8</div>
+          <div class="cell c3" style="--i:11"></div><div class="cell c2" style="--i:12"></div><div class="cell c3" style="--i:13"></div><div class="cell c3" style="--i:14"></div><div class="cell c3" style="--i:15"></div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== WORK ===== -->
+  <section class="block" id="work">
+    <div class="wrap">
+      <h2>Selected work</h2>
+      <p class="intro">Curriculum, software, and operations projects. Open any one to see the problem, what I did, and the result.</p>
+
+      <div class="filters" role="group" aria-label="Filter projects">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="learn" aria-pressed="false">Curriculum design</button>
+        <button type="button" data-filter="build" aria-pressed="false">Tools & apps</button>
+        <button type="button" data-filter="ops" aria-pressed="false">Operations</button>
+      </div>
+
+      <div class="work">
+
+        <!-- CURRICULUM 1 -->
+        <details class="item" data-track="learn">
+          <summary>
+            <h3>District CS scope and sequence</h3>
+            <span class="tag learn">Curriculum design</span>
+            <p class="one">A grades 6–8 computer science pathway aligned across multiple schools and two delivery models.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Middle schools in the district taught computer science on different schedules and models, with uneven coverage of state standards between campuses.</p></div>
+            <div><h4>What I did</h4><p>Unpacked the Iowa CS standards, built a vertical alignment map across schools, and created a pacing guide and a standards-unpacking workbook for our PLC.</p></div>
+            <div><h4>Tools & skills</h4><p>Standards alignment, curriculum mapping, Google Sheets, cross-school collaboration.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: e.g., adopted by X schools, closed Y standards gaps]</span></p></div>
+            <div class="links"><a href="#">View sample pages</a></div>
+          </div>
+        </details>
+
+        <!-- TOOL 1 -->
+        <details class="item" data-track="build">
+          <summary>
+            <h3>Automated grading tool</h3>
+            <span class="tag build">Tools & apps</span>
+            <p class="one">A rule-based Google Apps Script grader that scored about 150 student project packets.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Grading roughly 150 multi-part project packets by hand would have taken days and produced inconsistent scoring.</p></div>
+            <div><h4>What I did</h4><p>Wrote an Apps Script tool that reads each submission, applies rubric rules, and writes scores and feedback back to a gradebook sheet.</p></div>
+            <div><h4>Tools & skills</h4><p>Google Apps Script (JavaScript), Google Sheets and Docs APIs, rubric design.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: hours saved, e.g., ~X hours down to Y]</span></p></div>
+            <div class="links"><a href="#">Code on GitHub</a><a href="#">Watch walkthrough</a></div>
+          </div>
+        </details>
+
+        <!-- CURRICULUM 2 -->
+        <details class="item" data-track="learn">
+          <summary>
+            <h3>IoT design project unit</h3>
+            <span class="tag learn">Curriculum design</span>
+            <p class="one">A full 7th grade unit where students research a problem, collect survey data, and pitch a connected-device solution.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Students needed a project that connected coding and data to real decisions, not just isolated exercises.</p></div>
+            <div><h4>What I did</h4><p>Designed lessons on survey design and turning data into decisions, a game-based review, a 40-question final review, and a pitch day students presented at.</p></div>
+            <div><h4>Tools & skills</h4><p>Project-based learning, assessment design, Google Slides and Forms, game-based review.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: completion rate, student feedback, or a standout pitch]</span></p></div>
+            <div class="links"><a href="#">View unit overview</a></div>
+          </div>
+        </details>
+
+        <!-- TOOL 2 -->
+        <details class="item" data-track="build">
+          <summary>
+            <h3>Classroom noise monitor</h3>
+            <span class="tag build">Tools & apps</span>
+            <p class="one">A browser app that listens to room volume and turns staying focused into a team goal.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Reminding a full class about noise levels took instruction time and put the teacher in the role of enforcer.</p></div>
+            <div><h4>What I did</h4><p>Built a web app that auto-calibrates to the room, shows tiered warnings, and tracks quiet streaks on a leaderboard.</p></div>
+            <div><h4>Tools & skills</h4><p>JavaScript, Web Audio API, HTML/CSS, GitHub Pages, iterating from user feedback.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: e.g., fewer verbal reminders, used daily for X months]</span></p></div>
+            <div class="links"><a href="#">Try the live demo</a><a href="#">Code on GitHub</a></div>
+          </div>
+        </details>
+
+        <!-- OPS 1 -->
+        <details class="item" data-track="ops">
+          <summary>
+            <h3>Banking operations and system migration</h3>
+            <span class="tag ops">Operations</span>
+            <p class="one">ACH payment processing, accounts payable, and support for a Fiserv core system migration.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p><span class="todo">[EDIT: what the migration needed to accomplish and what was at stake]</span></p></div>
+            <div><h4>What I did</h4><p>Processed ACH payments and AP, and <span class="todo">[EDIT: your role in the Fiserv migration: testing, data validation, process documentation?]</span></p></div>
+            <div><h4>Tools & skills</h4><p>ACH and payment workflows, Fiserv, reconciliation, process accuracy under deadlines.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: volume handled, error rate, go-live outcome]</span></p></div>
+          </div>
+        </details>
+
+        <!-- TOOL 3 -->
+        <details class="item" data-track="build">
+          <summary>
+            <h3>Google Classroom submission checker</h3>
+            <span class="tag build">Tools & apps</span>
+            <p class="one">An Apps Script tool that flags missing work and drafts rubric-based feedback.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Tracking missing assignments across many sections meant clicking through each one by hand.</p></div>
+            <div><h4>What I did</h4><p>Connected to the Google Classroom API to list missing submissions and generate rubric-aligned feedback drafts for review.</p></div>
+            <div><h4>Tools & skills</h4><p>Google Apps Script, Classroom API, AI-assisted feedback with teacher review.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT: time saved per week]</span></p></div>
+            <div class="links"><a href="#">Code on GitHub</a></div>
+          </div>
+        </details>
+
+        <!-- CURRICULUM 3 -->
+        <details class="item" data-track="learn">
+          <summary>
+            <h3>Human-centered design unit</h3>
+            <span class="tag learn">Curriculum design</span>
+            <p class="one">Lessons that teach empathy and user interviews before students design anything.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Students jumped straight to building without understanding who they were building for.</p></div>
+            <div><h4>What I did</h4><p>Wrote lessons on empathy mapping and user interviews, plus a full unit assessment.</p></div>
+            <div><h4>Tools & skills</h4><p>Design thinking, backward design, assessment writing.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT]</span></p></div>
+          </div>
+        </details>
+
+        <!-- TOOL 4 -->
+        <details class="item" data-track="build">
+          <summary>
+            <h3>BREACH: Node 7 escape room</h3>
+            <span class="tag build">Tools & apps</span>
+            <p class="one">A web-based escape room that turns computer science review into a timed team mission.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Review days often felt like repeat lessons, and engagement dropped.</p></div>
+            <div><h4>What I did</h4><p>Built a story-driven puzzle sequence where each lock requires applying a concept from the unit.</p></div>
+            <div><h4>Tools & skills</h4><p>HTML, CSS, JavaScript, game design, GitHub Pages.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT]</span></p></div>
+            <div class="links"><a href="#">Play it</a></div>
+          </div>
+        </details>
+
+        <!-- CURRICULUM 4 -->
+        <details class="item" data-track="learn">
+          <summary>
+            <h3>Digital citizenship curriculum</h3>
+            <span class="tag learn">Curriculum design</span>
+            <p class="one">A school-wide expectations framework and lessons on responsible technology use.</p>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="case">
+            <div><h4>Problem</h4><p>Students needed shared, memorable expectations for using devices and the internet.</p></div>
+            <div><h4>What I did</h4><p>Created a branded expectations matrix, poster, lessons, and game-based review questions.</p></div>
+            <div><h4>Tools & skills</h4><p>Curriculum writing, visual design, Gimkit.</p></div>
+            <div><h4>Result</h4><p><span class="todo">[EDIT]</span></p></div>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CREDENTIALS ===== -->
+  <section class="block" id="credentials">
+    <div class="wrap">
+      <h2>Credentials</h2>
+      <p class="intro">Formal education and the training I’ve added since.</p>
+      <div class="creds">
+        <div>
+          <h3>Education</h3>
+          <ul>
+            <li>Master of Arts in Teaching <span class="todo">[EDIT: exact degree name]</span><span><span class="todo">[University, year]</span></span></li>
+            <li><span class="todo">[Bachelor’s degree]</span><span><span class="todo">[University, year]</span></span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Certifications</h3>
+          <ul>
+            <li>Google IT Support Professional Certificate<span>Coursera</span></li>
+            <li><span class="todo">[Other Coursera certificate]</span><span>Coursera</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Professional development</h3>
+          <ul>
+            <li>NewBoCo computer science educator conference<span>Physical computing and LED programming</span></li>
+            <li>Code.org CS Discoveries<span><span class="todo">[EDIT: PD or facilitator training, year]</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT + CONTACT ===== -->
+  <section class="block" id="about">
+    <div class="wrap about">
+      <div>
+        <h2>About</h2>
+        <p style="margin-top:1rem">I teach middle school computer science in Iowa, where I’ve written curriculum from single lessons up to a district-wide scope and sequence. Before teaching, I worked in banking operations, processing ACH payments and supporting a core system migration.</p>
+        <p>Both jobs taught me the same thing: people do their best work when the process is clear and the tools get out of the way. Now I’m looking for a role where I can design training, build tools, and help people adopt technology well.</p>
+      </div>
+      <div class="contact" id="contact">
+        <h2>Contact</h2>
+        <p>Open to roles in technical training, instructional design, implementation, and educational technology.</p>
+        <ul>
+          <li><a href="mailto:hello@jonathanlanger.com">hello@jonathanlanger.com</a></li>
+          <li><a href="https://www.linkedin.com/in/">LinkedIn</a> <span class="todo">[EDIT: your profile URL]</span></li>
+          <li><a href="https://github.com/">GitHub</a> <span class="todo">[EDIT: your username]</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="yr">2026</span> Jonathan Langer</div>
+</footer>
+
+<script>
+  // Project filters
+  const buttons = document.querySelectorAll('.filters button');
+  const items = document.querySelectorAll('.item');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      buttons.forEach(b => b.setAttribute('aria-pressed', b === btn));
+      items.forEach(it => { it.hidden = f !== 'all' && it.dataset.track !== f; });
+    });
+  });
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
