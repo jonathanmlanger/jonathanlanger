@@ -4,36 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jonathan Langer</title>
-<meta name="description" content="Jonathan Langer: curriculum design and educational technology. Portfolio coming soon.">
+<meta name="description" content="Jonathan Langer designs how people learn technical skills and builds the tools that support them. Portfolio coming soon.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#F6F7F9;--ink:#1B2631;--muted:#56626F;--learn:#A86A12;--build:#28598A;--focus:#28598A;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--paper:#141A20;--ink:#E7ECF0;--muted:#A3AFBA;--learn:#E0A64F;--build:#7FB0E0;--focus:#7FB0E0;color-scheme:dark}}
+:root{--paper:#F6F7F9;--surface:#FFFFFF;--ink:#1B2631;--muted:#56626F;--line:#D9DEE4;--wall:#9AA5B1;--learn:#A86A12;--learn-soft:#F5E9D6;--build:#28598A;--build-soft:#DFE9F4;--bad:#B23B3B;--focus:#28598A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--paper:#141A20;--surface:#1B232B;--ink:#E7ECF0;--muted:#A3AFBA;--line:#2E3944;--wall:#56626F;--learn:#E0A64F;--learn-soft:#3A2D1A;--build:#7FB0E0;--build-soft:#1E3247;--bad:#E07A7A;--focus:#7FB0E0;color-scheme:dark}}
 *{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:2rem 1.5rem}
-main{max-width:34rem}
-h1{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(2.4rem,7vw,3.4rem);line-height:1.1;margin:0 0 1.5rem}
-ul{list-style:none;margin:0 0 2rem;padding:0;display:grid;gap:.75rem}
-li{padding-left:1rem;border-left:4px solid;font-size:1.15rem}
-li:first-child{border-color:var(--learn)}
-li:last-child{border-color:var(--build)}
-p{color:var(--muted);margin:0 0 .75rem}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.65 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.page{max-width:680px;margin:0 auto;padding:4.5rem 1.5rem 3rem}
+.status{display:inline-flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:500;color:var(--muted);margin-bottom:1.75rem}
+.status::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:var(--learn)}
+h1{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(2.5rem,7vw,3.5rem);line-height:1.1;margin:0 0 1.25rem}
+.intro{font-size:1.15rem;color:var(--ink);margin:0 0 1.5rem;max-width:56ch}
+.statement{list-style:none;margin:0 0 2.5rem;padding:0;display:grid;gap:.6rem}
+.statement li{padding-left:1rem;border-left:4px solid;font-size:1.1rem}
+.statement li:first-child{border-color:var(--learn)}
+.statement li:last-child{border-color:var(--build)}
+.bridge{color:var(--muted);margin:0 0 1.25rem;max-width:58ch}
+.bridge em{font-family:"Newsreader",Georgia,serif;font-size:1.15em;color:var(--ink)}
 a{color:var(--ink);font-weight:600}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:4px}
+
+/* Game card */
+.game{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.25rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.25rem;align-items:start}
+.board{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.cell{aspect-ratio:1;border-radius:5px;background:var(--paper);display:grid;place-items:center;font-size:1.1rem}
+.cell.wall{background:var(--wall)}
+.cell.goal{background:var(--learn-soft);color:var(--learn)}
+.cell.trail{background:var(--build-soft)}
+.cell.win{background:var(--learn);color:var(--surface)}
+/* the dot, with a little face that looks where it's going */
+.bot{width:68%;height:68%;border-radius:50%;background:var(--build);position:relative;box-shadow:0 0 0 3px var(--surface)}
+.bot::before,.bot::after{content:"";position:absolute;width:20%;height:20%;border-radius:50%;background:var(--surface);top:34%;transition:transform .15s}
+.bot::before{left:24%}.bot::after{right:24%}
+.bot.U::before,.bot.U::after{transform:translateY(-55%)}
+.bot.D::before,.bot.D::after{transform:translateY(55%)}
+.bot.L::before,.bot.L::after{transform:translateX(-45%)}
+.bot.R::before,.bot.R::after{transform:translateX(45%)}
+.bot.bump{background:var(--bad)}
+@media (prefers-reduced-motion:no-preference){
+  .bot.bump{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+  .bot.happy{animation:hop .5s ease-out 2}
+  @keyframes hop{50%{transform:translateY(-18%)}}
+}
+.controls h2{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:1.25rem;margin:0}
+.controls .how{font-size:.875rem;color:var(--muted);margin:.15rem 0 .75rem;line-height:1.45}
+.program{min-height:2.5rem;display:flex;flex-wrap:wrap;gap:4px;padding:5px;border:1.5px dashed var(--line);border-radius:8px;margin-bottom:.6rem}
+.program .empty{font-size:.8rem;color:var(--muted);align-self:center;padding-left:.25rem}
+.chip{width:1.7rem;height:1.7rem;border-radius:5px;background:var(--build-soft);color:var(--build);display:grid;place-items:center;font-weight:600;font-size:.9rem}
+.chip.now{background:var(--build);color:var(--surface)}
+.chip.bad{background:var(--bad);color:var(--surface)}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:5px}
+.actions{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:5px}
+button{font:inherit;font-weight:600;font-size:.9rem;padding:.5rem 0;border-radius:7px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.run{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button:disabled{opacity:.45;cursor:default}
+.msg{min-height:2.9rem;font-size:.875rem;line-height:1.45;margin:.7rem 0 0}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem}
+footer p{margin:0 0 .35rem}
+@media (max-width:620px){
+  .page{padding-top:3rem}
+  .game{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<main>
-  <h1>Jonathan Langer</h1>
-  <ul>
-    <li>I design how people learn technical skills.</li>
-    <li>I build the tools that make that learning run.</li>
-  </ul>
-  <p>My full portfolio of curriculum and software projects is on its way.</p>
-  <p>In the meantime, reach me at <a href="mailto:hello@jonathanlanger.com">hello@jonathanlanger.com</a>.</p>
-</main>
+<div class="page">
+  <main>
+    <span class="status">Portfolio under construction</span>
+    <h1>Hi, I’m Jonathan.</h1>
+    <p class="intro">I teach computer science in Iowa. Across nearly ten years in the classroom and six in banking before that, I’ve always been the one drawn to the technology, and to helping the people around me feel at home with it. These days, that means:</p>
+    <ul class="statement">
+      <li>Designing how people learn technical skills.</li>
+      <li>Building the tools that make that learning run.</li>
+    </ul>
+
+    <p class="bridge">The rest of the portfolio is on its way. Until then, here’s a little puzzle I made. It’s really a lesson in disguise: <em>plan carefully, debug cheerfully.</em></p>
+
+    <section class="game" aria-labelledby="game-title">
+      <div class="board" id="board" role="img" aria-label="Puzzle grid"></div>
+      <div class="controls">
+        <h2 id="game-title">Program the dot</h2>
+        <p class="how">Line up your moves, then press Run to send the dot to the star.</p>
+        <div class="program" id="program" aria-live="polite"></div>
+        <div class="pad">
+          <button type="button" data-move="U" aria-label="Add move up">↑</button>
+          <button type="button" data-move="D" aria-label="Add move down">↓</button>
+          <button type="button" data-move="L" aria-label="Add move left">←</button>
+          <button type="button" data-move="R" aria-label="Add move right">→</button>
+        </div>
+        <div class="actions">
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="newp">New</button>
+          <button type="button" class="run" id="run">Run</button>
+        </div>
+        <p class="msg" id="msg" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Thanks for stopping by. I’d love to hear from you at <a href="mailto:hello@jonathanlanger.com">hello@jonathanlanger.com</a>.</p>
+  </footer>
+</div>
+
+<script>
+const N = 6, MAX = 16;
+const DIRS = {U:[-1,0], D:[1,0], L:[0,-1], R:[0,1]};
+const ICON = {U:'↑', D:'↓', L:'←', R:'→'};
+const boardEl = document.getElementById('board');
+const progEl = document.getElementById('program');
+const msgEl = document.getElementById('msg');
+const runBtn = document.getElementById('run');
+let walls, start, goal, best, prog = [], pos, facing = 'R', running = false, solvedCount = 0;
+
+function shortest(s, g, w){
+  const seen = new Set([s.join()]); const q = [[s,0]];
+  while(q.length){
+    const [[r,c],d] = q.shift();
+    if(r===g[0] && c===g[1]) return d;
+    for(const [dr,dc] of Object.values(DIRS)){
+      const nr=r+dr, nc=c+dc, k=nr+','+nc;
+      if(nr<0||nc<0||nr>=N||nc>=N||w.has(k)||seen.has(k)) continue;
+      seen.add(k); q.push([[nr,nc],d+1]);
+    }
+  }
+  return -1;
+}
+const rnd = () => [Math.floor(Math.random()*N), Math.floor(Math.random()*N)];
+
+function newPuzzle(){
+  do{
+    walls = new Set(); start = rnd(); goal = rnd();
+    const count = 8 + Math.floor(Math.random()*4);
+    while(walls.size < count){
+      const w = rnd().join();
+      if(w!==start.join() && w!==goal.join()) walls.add(w);
+    }
+    best = shortest(start, goal, walls);
+  } while(best < 6 || best > 10);
+  prog = []; pos = [...start]; facing = goal[1] < start[1] ? 'L' : 'R';
+  msgEl.textContent = 'The shortest route takes ' + best + ' moves. No pressure.';
+  draw(); drawProg();
+}
+
+function draw(trail = [], mood = ''){
+  boardEl.innerHTML = '';
+  const t = new Set(trail.map(p => p.join()));
+  const atGoal = pos[0]===goal[0] && pos[1]===goal[1];
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    const k = r+','+c, d = document.createElement('div');
+    d.className = 'cell';
+    if(walls.has(k)) d.classList.add('wall');
+    else if(k===goal.join()){ d.classList.add(atGoal ? 'win' : 'goal'); if(!atGoal) d.textContent = '★'; }
+    else if(t.has(k)) d.classList.add('trail');
+    if(r===pos[0] && c===pos[1]){
+      const b = document.createElement('div');
+      b.className = 'bot ' + facing + (mood ? ' ' + mood : '');
+      d.appendChild(b);
+    }
+    boardEl.appendChild(d);
+  }
+}
+
+function drawProg(active = -1, bad = -1){
+  progEl.innerHTML = '';
+  if(!prog.length) progEl.innerHTML = '<span class="empty">Your program goes here</span>';
+  prog.forEach((m,i) => {
+    const s = document.createElement('span');
+    s.className = 'chip' + (i===active ? ' now' : '') + (i===bad ? ' bad' : '');
+    s.textContent = ICON[m]; progEl.appendChild(s);
+  });
+  runBtn.disabled = !prog.length || running;
+}
+
+function reset(){ pos = [...start]; facing = prog.length ? prog[prog.length-1] : facing; }
+function add(m){
+  if(running) return;
+  if(prog.length >= MAX){ msgEl.textContent = 'That’s a long program! Try Undo and look for a shorter path.'; return; }
+  prog.push(m); reset(); draw(); drawProg();
+}
+function undo(){ if(running) return; prog.pop(); reset(); draw(); drawProg(); }
+
+function run(){
+  if(running || !prog.length) return;
+  running = true; pos = [...start];
+  const trail = [[...start]]; let i = 0;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  msgEl.textContent = 'Running…'; drawProg(0);
+  const stop = () => { running = false; runBtn.disabled = false; };
+  const step = () => {
+    facing = prog[i];
+    const [dr,dc] = DIRS[prog[i]];
+    const nr = pos[0]+dr, nc = pos[1]+dc;
+    if(nr<0||nc<0||nr>=N||nc>=N||walls.has(nr+','+nc)){
+      draw(trail, 'bump'); drawProg(-1, i);
+      msgEl.textContent = 'Bonk! Move ' + (i+1) + ' runs into ' + (walls.has(nr+','+nc) ? 'a wall' : 'the edge') + '. Every good program has a bug or two. Undo back to it and try again.';
+      return stop();
+    }
+    pos = [nr,nc]; trail.push([...pos]);
+    if(nr===goal[0] && nc===goal[1]){
+      draw(trail, 'happy'); drawProg(i);
+      const n = i+1; solvedCount++;
+      let m = n === best
+        ? 'Made it in ' + n + ' moves — the shortest possible. Beautiful program!'
+        : 'Made it in ' + n + ' moves. The shortest is ' + best + '. Can you find it?';
+      if(n === best && solvedCount >= 3) m += ' You’re on a roll; I’d hire you.';
+      msgEl.textContent = m;
+      return stop();
+    }
+    draw(trail); drawProg(i);
+    i++;
+    if(i >= prog.length){
+      msgEl.textContent = 'So close! The program ran out of moves before the star. Add a few more.';
+      drawProg(); return stop();
+    }
+    setTimeout(step, reduce ? 120 : 280);
+  };
+  setTimeout(step, reduce ? 60 : 200);
+}
+
+document.querySelectorAll('[data-move]').forEach(b => b.addEventListener('click', () => add(b.dataset.move)));
+document.getElementById('undo').addEventListener('click', undo);
+document.getElementById('newp').addEventListener('click', () => { if(!running) newPuzzle(); });
+runBtn.addEventListener('click', run);
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'A') return;
+  const map = {ArrowUp:'U', ArrowDown:'D', ArrowLeft:'L', ArrowRight:'R'};
+  if(map[e.key]){ e.preventDefault(); add(map[e.key]); }
+  else if(e.key === 'Backspace'){ e.preventDefault(); undo(); }
+  else if(e.key === 'Enter' && e.target.tagName !== 'BUTTON'){ e.preventDefault(); run(); }
+});
+newPuzzle();
+</script>
 </body>
 </html>
